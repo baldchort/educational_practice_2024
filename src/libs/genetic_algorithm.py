@@ -1,14 +1,15 @@
-from backpack import Item
+from objects import *
 import sys
 
 
-class Alg:
-    def __init__(self, items: list, limitWeight: int):
+class GeneticAlgorithm:
+    def __init__(self, items: list[Item],
+                 parameters: AlgorithmParameters
+                 ):
         self.items = items
-        self.limitAmount = len(items)
-        self.limitWeight = limitWeight
+        self.parameters = parameters
 
-    def conductGeneticAlgorithm(self):
+    def generateRandomGeneration(self):
         pass
 
 
