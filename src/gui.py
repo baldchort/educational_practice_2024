@@ -1,4 +1,3 @@
-
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap, QCloseEvent
 from PyQt6.QtWidgets import QApplication, QWidget, QMainWindow, QPushButton, QVBoxLayout, QLineEdit, QLabel, QDialog, \
@@ -7,37 +6,53 @@ from PyQt6.QtWidgets import QApplication, QWidget, QMainWindow, QPushButton, QVB
 
 class Window(QMainWindow):
     def __init__(self):
-        super().__init__()
-        self.close = None
-        self.fileName = None
-        self.dialog = QDialog
+        super().__init__()  # наследуем от QMainWindow
 
+        self.inputFileName = '~/'
+
+        # Окно ввода вручную
         self.inputWindow = InputWindow()
+        # Окно работы алгоритма
         self.iterationWindow = IterationWindow()
-        self.randWindow = RandomWindow()
+        # Окно параметров алгоритма
+        self.algParamsWindow = AlgParamsWindow()
 
-        self.setWindowTitle("Рюкзачки")
+        # Название окна
+        self.setWindowTitle("Задача о рюкзаках")
+        # Размер окна
         self.setFixedSize(400, 300)
 
+        # Вертикальная разметка виджетов
         layout = QVBoxLayout()
-        widgets = []
+        # Массив виджетов (все виджеты, которые будут на этом окне)
+        main_window_widgets = []
 
-        butt1 = QPushButton("Параметры работы алгоритма")
-        widgets.append(butt1)
-        butt1.clicked.connect(self.clickOnRandom)
+        # Создаем кнопку ввода параметров алгоритма
+        # Добавляем в виджеты
+        # Привязываем к событию clicked ивент paramsButtonEvent
+        params_button = QPushButton("Параметры работы алгоритма")
+        main_window_widgets.append(params_button)
+        params_button.clicked.connect(self.paramsButtonEvent)
 
-        butt2 = QPushButton("Загрузить данные из файла")
-        butt2.clicked.connect(self.browse)
-        widgets.append(butt2)
+        # Создаем кнопку закгрузки данных из файла
+        # Добавляем в виджеты
+        # Привязываем к событию clicked ивент browseEvent
+        browse_file_button = QPushButton("Загрузить данные из файла")
+        browse_file_button.clicked.connect(self.browseEvent)
+        main_window_widgets.append(browse_file_button)
 
-        butt3 = QPushButton("Ввод данных вручную")
-        butt3.clicked.connect(self.clickOnInputByHand)
+        # Создаем кнопку ввода вручную
+        # Добавляем в виджеты
+        # Привязываем к событию clicked ивент paramsButtonEvent
+        input_button = QPushButton("Ввод данных вручную")
+        input_button.clicked.connect(self.InputButtonEvent)
+        main_window_widgets.append(input_button)
 
-        widgets.append(butt3)
-
-        for w in widgets:
+        # Добавляем в разметку все наши элементы
+        for w in main_window_widgets:
             layout.addWidget(w)
 
+        # Превращаем нашу разметку в один большой виджет
         widget = QWidget()
         widget.setLayout(layout)
 
@@ -45,40 +60,50 @@ class Window(QMainWindow):
         # заполняя всё пространство окна.
         self.setCentralWidget(widget)
 
-    def clickOnRandom(self):
-        self.randWindow.show()
+    # Обработка сигнала clicked для кнопки 1
+    def paramsButtonEvent(self):
+        self.algParamsWindow.show()
 
-    def browse(self):
-        fname = QFileDialog.getOpenFileName(self, 'Открыть файл', '~/')
-        self.fileName = fname[0]
-        print(self.fileName)
+    # Обработка сигнала clicked для кнопки 2
+    # Открываем диалог (выбор файла)
+    def browseEvent(self):
+        file_name = QFileDialog.getOpenFileName(self, 'Открыть файл', '~/')
+        self.inputFileName = file_name[0]
+        print(self.inputFileName)
 
-    def clickOnInputByHand(self):
+        self.iterationWindow.show()
+
+    # Обработка сигнала clicked для кнопки 3
+    def InputButtonEvent(self):
         self.inputWindow.show()
 
+    # Ивент запуска окна с алгоритмом
     def startAlgorithm(self):
         self.iterationWindow.show()
 
+    # Ивент закрытия главного окна
     def closeEvent(self, event: QCloseEvent) -> None:
-        self.close = QMessageBox(self)
-        self.close.setText("Закрыть приложение?")
-        self.close.setStandardButtons(QMessageBox.standardButtons(self.close).Yes |
-                                      QMessageBox.standardButtons(self.close).Cancel)
-        close = self.close.exec()
+        closing_MB = QMessageBox(self)
+        closing_MB.setText("Закрыть приложение?")
+        closing_MB.setStandardButtons(QMessageBox.standardButtons(closing_MB).Yes |
+                                      QMessageBox.standardButtons(closing_MB).Cancel)
+        closed = closing_MB.exec()
 
-        if close == QMessageBox.standardButtons(self.close).Yes:
+        if closed == QMessageBox.standardButtons(closing_MB).Yes:
             event.accept()
-            self.close_all_windows()
+            close_all_windows()
         else:
             event.ignore()
 
-    def close_all_windows(self):
-        win_list = QApplication.allWindows()
-        for w in win_list:
-            w.close()
+
+# Функция закрытия всех окон
+def close_all_windows():
+    win_list = QApplication.allWindows()
+    for w in win_list:
+        w.close()
 
 
-class RandomWindow(QMainWindow):
+class AlgParamsWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Параметры работы алгоритма")
@@ -123,12 +148,15 @@ class RandomWindow(QMainWindow):
         self.setCentralWidget(widget)
 
     def startAlgorithm(self):
+        self.close()
         self.iterationWindow.show()
 
 
 class InputWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.iterationAlg = IterationWindow()
+
         self.setWindowTitle("Ввод данных")
         # self.setFixedSize(300, 500)
         self.move(1000, 300)
@@ -154,6 +182,7 @@ class InputWindow(QMainWindow):
         widgets.append(self.inputData)
 
         self.startButton = QPushButton("Запуск!")
+        self.startButton.clicked.connect(self.startAlg)
         widgets.append(self.startButton)
 
         for w in widgets:
@@ -163,6 +192,10 @@ class InputWindow(QMainWindow):
         widget.setLayout(layout)
 
         self.setCentralWidget(widget)
+
+    def startAlg(self):
+        self.close()
+        self.iterationAlg.show()
 
 
 class IterationWindow(QMainWindow):
@@ -212,4 +245,3 @@ class IterationWindow(QMainWindow):
         widget.setLayout(layout)
 
         self.setCentralWidget(widget)
-
