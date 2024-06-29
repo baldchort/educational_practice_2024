@@ -1,16 +1,20 @@
 from objects import *
 import sys
+import random
 
 
 class GeneticAlgorithm:
     def __init__(self, items: list[Item],
-                 parameters: AlgorithmParameters
-                 ):
+                 parameters: AlgorithmParameters):
         self.items = items
         self.parameters = parameters
 
-    def generateRandomGeneration(self):
+    def generateRandomGeneration(self) -> Generation:
         pass
+        # randomGeneration = Generation([])
+        # for _ in range(self.parameters.amountOfIndividsPerGeneration):
+        #     randomGeneration.append([item for item in self.items])
+        # return randGeneration
 
 
 def getInput():
