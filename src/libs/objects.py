@@ -76,3 +76,10 @@ class AlgorithmParameters:
         self.mutationProbability = mutationProbability
         self.amountOfIndividsPerGeneration = amountOfIndividsPerGeneration
         self.maxAmountOfGenerations = maxAmountOfGenerations
+
+
+class CurrentIterationInfo:
+    def __init__(self, bestBackpacks: list[Backpack], currentMaxFitness: float, currentAverageFitness: float):
+        self.bestBackpacks = bestBackpacks
+        self.currentMaxFitness = currentMaxFitness
+        self.currentAverageFitness = currentAverageFitness
