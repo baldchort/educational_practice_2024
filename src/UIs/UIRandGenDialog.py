@@ -35,9 +35,9 @@ class Ui_randGenDialog(object):
         spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem1)
         self.verticalLayout.addLayout(self.horizontalLayout_2)
-        self.startButton = QtWidgets.QPushButton(parent=randGenDialog)
-        self.startButton.setGeometry(QtCore.QRect(230, 110, 158, 32))
-        self.startButton.setObjectName("startButton")
+        self.doneButton = QtWidgets.QPushButton(parent=randGenDialog)
+        self.doneButton.setGeometry(QtCore.QRect(230, 110, 158, 32))
+        self.doneButton.setObjectName("doneButton")
         self.CancelButton = QtWidgets.QPushButton(parent=randGenDialog)
         self.CancelButton.setGeometry(QtCore.QRect(20, 110, 121, 32))
         self.CancelButton.setObjectName("CancelButton")
@@ -49,7 +49,7 @@ class Ui_randGenDialog(object):
         _translate = QtCore.QCoreApplication.translate
         randGenDialog.setWindowTitle(_translate("randGenDialog", "Случайная генерация"))
         self.amountLabel.setText(_translate("randGenDialog", "Введите количество предметов"))
-        self.startButton.setText(_translate("randGenDialog", "Запуск алгоритма"))
+        self.doneButton.setText(_translate("randGenDialog", "Готово"))
         self.CancelButton.setText(_translate("randGenDialog", "Назад"))
 
 
