@@ -103,6 +103,7 @@ class AlgorithmParameters:
         self.maxAmountOfGenerations = maxAmountOfGenerations
 
 
+
 class IterationInfo:
     def __init__(self, bestBackpacks: list[Backpack], currentMaxFitness: float, currentAverageFitness: float):
         self.bestBackpacks = bestBackpacks
@@ -124,3 +125,4 @@ class IterationInfo:
 #
 #     def drawPlot(self) -> None:
 #         pass
+
