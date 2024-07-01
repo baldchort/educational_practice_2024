@@ -2,9 +2,9 @@ from typing import Iterator
 
 
 class Item:
-    def __init__(self, weight: int, cost: int):
-        self.weight = weight
+    def __init__(self, cost: int, weight: int):
         self.cost = cost
+        self.weight = weight
 
     def __str__(self):
         return f"Вещь стоит {self.cost} и весит {self.weight}"
@@ -17,13 +17,19 @@ class Backpack:
         self.weight = 0
 
     def calculationWeight(self, items: list[Item]) -> None:
-        self.weight = sum(items[i].weight * self.genome for i in range(len(items)))
+        self.weight = sum(items[i].weight * self.genome[i] for i in range(len(items)))
 
-    def calculationFitness(self, limitWeight: int) -> None:
-        self.cost = 0 if self.weight > limitWeight else sum(item.cost for item in self.items)
+    # нужно исправить перерасчёт целевой функции:
+    # пусть жёсткий штраф будет начинаться от перевеса на вес самой тяжёлой вещи
+    # а мягкий штраф нужно ещё придумать :/
+    def calculationFitness(self, limitWeight: int, items: list[Item]) -> None:
+        self.cost = 0 if self.weight > limitWeight else sum(items[i].cost * self.genome[i] for i in range(len(items)))
 
     def __str__(self):
-        return f"Рюкзак содержит: \n{'\n'.join(str(item) for item in self.items)}"
+        return ", ".join(map(str, self.genome))
+
+    def __iter__(self) -> Iterator:
+        return iter(self.genome)
 
     def __le__(self, other: 'Backpack'):
         return self.cost <= other.cost
@@ -44,6 +50,9 @@ class Generation:
 
     def __getitem__(self, key: int) -> Backpack:
         return self.backpacks[key]
+
+    def __str__(self):
+        return "\n".join(map(str, self.backpacks))
 
     def append(self, item: Backpack) -> None:
         self.backpacks.append(item)
