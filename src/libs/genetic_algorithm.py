@@ -8,22 +8,20 @@ class GeneticAlgorithm:
         self.items = items
         self.parameters = parameters
 
-    # может создавать мерворождённые решения
-    # нужно либо сделать так, чтобы максимальное количество экземпляров одной вещи, добавляемых на шаге зависело
-    # от текущего веса, либо сделать заполнение принципиально иначе
     def generateRandomGeneration(self) -> Generation:
         randomGeneration = Generation([])
         for _ in range(self.parameters.amountOfIndividsPerGeneration):
             randomGeneration.append(Backpack([random.randint(0, self.parameters.maxBackpackWeight // item.weight)
                                               for item in self.items]))
+            randomGeneration[-1].calculationWeight(self.items)
+            randomGeneration[-1].calculationFitness(self.parameters.maxBackpackWeight, self.items)
         return randomGeneration
 
-    # название методов и их определение можно и нужно будет поменять
+    def tournamentSelection(self, generation: Generation) -> Backpack:
+        tournament = random.shuffle([i for i in range(0, len(generation))])[:4]
+        return max([generation[i] for i in tournament])
 
-    def tournamentSelection(self, generation: Generation) -> list[Backpack]:
-        pass
-
-    def uniformCrossing(self, parents: tuple[Backpack, Backpack]) -> Backpack:
+    def uniformCrossing(self, parents: tuple[Backpack, Backpack]) -> list[Backpack]:
         pass
 
     # метод может ничего не возвращать, если будет менять передаваемый параметр (не помню, как это делается в питоне)
@@ -31,11 +29,15 @@ class GeneticAlgorithm:
         # + описание мутации каждого гена в геноме
         pass
 
+    def eliteChoice(self, generation: Generation) -> Generation:
+        pass
+
     def dynamicProgrammingSolution(self) -> Backpack:
         pass
 
-    def solution(self) -> Backpack:
-        pass
+    def solution(self) -> list[list[Backpack]]:
+        initGeneration = self.generateRandomGeneration()
+        result = []
 
 
 def getInput():

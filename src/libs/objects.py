@@ -19,11 +19,10 @@ class Backpack:
     def calculationWeight(self, items: list[Item]) -> None:
         self.weight = sum(items[i].weight * self.genome[i] for i in range(len(items)))
 
-    # нужно исправить перерасчёт целевой функции:
-    # пусть жёсткий штраф будет начинаться от перевеса на вес самой тяжёлой вещи
-    # а мягкий штраф нужно ещё придумать :/
     def calculationFitness(self, limitWeight: int, items: list[Item]) -> None:
-        self.cost = 0 if self.weight > limitWeight else sum(items[i].cost * self.genome[i] for i in range(len(items)))
+        self.cost = sum(
+            items[i].cost * self.genome[i] for i in range(len(items))) - 0 if self.weight < limitWeight else (
+                    self.weight - limitWeight)
 
     def __str__(self):
         return ", ".join(map(str, self.genome))
@@ -31,11 +30,17 @@ class Backpack:
     def __iter__(self) -> Iterator:
         return iter(self.genome)
 
-    def __le__(self, other: 'Backpack'):
+    def __le__(self, other: 'Backpack') -> bool:
         return self.cost <= other.cost
 
-    def __lt__(self, other: 'Backpack'):
+    def __lt__(self, other: 'Backpack') -> bool:
         return self.cost < other.cost
+
+    def __ge__(self, other: 'Backpack') -> bool:
+        return self.cost >= other.cost
+
+    def __gt__(self, other: 'Backpack') -> bool:
+        return self.cost > other.cost
 
 
 class Generation:
@@ -62,6 +67,13 @@ class Generation:
 
     def remove(self, item: Backpack) -> None:
         self.backpacks.remove(item)
+
+    def getBestBackpacks(self) -> list[Backpack]:
+        sorted_backpacks = sorted(self.backpacks, key=lambda x: x.cost, reverse=True)
+        return sorted_backpacks[:3]
+
+    def averagePrice(self) -> float:
+        return sum(backpack.cost for backpack in self.backpacks) / len(self.backpacks)
 
 
 class AlgorithmParameters:
