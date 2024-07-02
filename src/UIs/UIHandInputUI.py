@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_HandInputDialog(object):
     def setupUi(self, HandInputDialog):
         HandInputDialog.setObjectName("HandInputDialog")
-        HandInputDialog.resize(342, 282)
+        HandInputDialog.resize(280, 391)
         HandInputDialog.setSizeGripEnabled(False)
         HandInputDialog.setModal(False)
         self.gridLayout = QtWidgets.QGridLayout(HandInputDialog)
@@ -22,9 +22,9 @@ class Ui_HandInputDialog(object):
         self.cancelButton = QtWidgets.QPushButton(parent=HandInputDialog)
         self.cancelButton.setObjectName("cancelButton")
         self.horizontalLayout.addWidget(self.cancelButton)
-        self.startButton = QtWidgets.QPushButton(parent=HandInputDialog)
-        self.startButton.setObjectName("startButton")
-        self.horizontalLayout.addWidget(self.startButton)
+        self.doneButton = QtWidgets.QPushButton(parent=HandInputDialog)
+        self.doneButton.setObjectName("doneButton")
+        self.horizontalLayout.addWidget(self.doneButton)
         self.gridLayout.addLayout(self.horizontalLayout, 2, 0, 1, 1)
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
@@ -60,7 +60,7 @@ class Ui_HandInputDialog(object):
         _translate = QtCore.QCoreApplication.translate
         HandInputDialog.setWindowTitle(_translate("HandInputDialog", "Ручной ввод"))
         self.cancelButton.setText(_translate("HandInputDialog", "Назад"))
-        self.startButton.setText(_translate("HandInputDialog", "Запуск алгоритма"))
+        self.doneButton.setText(_translate("HandInputDialog", "Готово"))
         self.amountLabel.setText(_translate("HandInputDialog", "Введите количество предметов"))
         self.AmountLineEdit.setPlaceholderText(_translate("HandInputDialog", "Кол-во предметов"))
         self.label_2.setText(_translate("HandInputDialog", "Введите соответсвующую информацию"))
