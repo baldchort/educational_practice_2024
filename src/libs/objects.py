@@ -113,6 +113,7 @@ class IterationInfo:
         self.currentMaxFitness = currentMaxFitness
         self.currentAverageFitness = currentAverageFitness
 
+
 # class AllInfo:
 #     def __init__(self, maxBackpackWeight: int, items: list[Item]):
 #         self.maxBackpackWeight = maxBackpackWeight

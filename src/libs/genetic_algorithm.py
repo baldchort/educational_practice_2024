@@ -1,6 +1,7 @@
+from src.libs.objects import *
+
 import numpy as np
 
-from objects import *
 import matplotlib.pyplot as plt
 import random
 
@@ -153,7 +154,7 @@ class GeneticAlgorithm:
     def dynamicProgrammingSolution(self) -> Backpack:
         pass
 
-    def drawPlot(self, maxFitness: list[int], averageFitness: list[float]) -> None:
+    def drawPlot(self, maxFitness: list[float], averageFitness: list[float]) -> None:
         x_len = self.parameters.maxAmountOfGenerations
         plt.plot(list(range(x_len)), averageFitness, 'r-')
         plt.plot(list(range(x_len)), maxFitness, 'b-')
@@ -163,7 +164,8 @@ class GeneticAlgorithm:
         # plt.yticks(np.arange(min(maxFitness), max(maxFitness)+1, 5))
         plt.xlabel('Поколение')
         plt.ylabel('Приспособленность')
-        plt.show()
+        #plt.draw()
+        return plt
 
     def outputGenerationInfo(self, generation: Generation, generationNumber: int):
         print(f"\nПоколение №{generationNumber}:")
