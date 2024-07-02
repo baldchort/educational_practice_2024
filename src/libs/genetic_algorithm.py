@@ -104,7 +104,7 @@ class GeneticAlgorithm:
         for i in range(len(child.genome)):
             if i == mutationNum == 1:
                 print(f"\tПервый ген до мутации: {child.genome[i]}")
-            if random.random() < self.parameters.mutationProbability * 2:
+            if random.random() < self.parameters.mutationProbability:
                 delta = 0
                 for j in range(parameter):
                     randVal = random.choices([1, 0], weights=[1 / parameter, 1 - 1 / parameter])[0]
@@ -165,7 +165,7 @@ class GeneticAlgorithm:
         plt.ylabel('Приспособленность')
         plt.show()
 
-    def outputGenerationInfo(self, generation: Generation, generationNumber: int):
+    def outputGenerationInfo(self, generation: Generation, generationNumber: int) -> None:
         print(f"\nПоколение №{generationNumber}:")
         sortedGeneration = sorted(generation, key=lambda x: x.cost, reverse=True)
         for i, solution in enumerate(sortedGeneration):
@@ -176,7 +176,7 @@ class GeneticAlgorithm:
         print(f"Текущая максимальная приспособленность: {generation.getMaxFitness()}")
         print(f"Текущая средняя приспособленность: {generation.getAverageFitness()}")
 
-    def outputBackpacks(self, backpacks: list[Backpack]):
+    def outputBackpacks(self, backpacks: list[Backpack]) -> None:
         for i, backpack in enumerate(backpacks):
             print(f"{i + 1}) {backpack.genome}")
             print(f"\tСуммарная стоимость вещей: {backpack.cost}")

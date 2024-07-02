@@ -52,6 +52,9 @@ class Generation:
         self.maxFitness = 0
         self.averageFitness = 0
 
+    def __str__(self):
+        return "\n".join(map(str, self.backpacks))
+
     def __iter__(self) -> Iterator:
         return iter(self.backpacks)
 
@@ -60,9 +63,6 @@ class Generation:
 
     def __getitem__(self, key: int) -> Backpack:
         return self.backpacks[key]
-
-    def __str__(self):
-        return "\n".join(map(str, self.backpacks))
 
     def append(self, item: Backpack) -> None:
         self.backpacks.append(item)
