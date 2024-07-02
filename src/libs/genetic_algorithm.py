@@ -1,4 +1,4 @@
-from objects import *
+from src.libs.objects import *
 import matplotlib.pyplot as plt
 import random
 
@@ -74,14 +74,15 @@ class GeneticAlgorithm:
     def dynamicProgrammingSolution(self) -> Backpack:
         pass
 
-    def drawPlot(self, maxFitness: list[float], averageFitness: list[float]) -> None:
+    def drawPlot(self, maxFitness: list[float], averageFitness: list[float]):
         x_len = self.parameters.maxAmountOfGenerations
         plt.plot(list(range(x_len)), averageFitness, 'r-')
         plt.plot(list(range(x_len)), maxFitness, 'b-')
         plt.grid()
         plt.xlabel('Поколение')
         plt.ylabel('Приспособленность')
-        plt.show()
+        #plt.draw()
+        return plt
 
     def outputGenerationInfo(self, generation: Generation, generationNum: int):
         print(f"\nПоколение №{generationNum}:")
@@ -107,7 +108,7 @@ class GeneticAlgorithm:
         maxFitness = [generation.getMaxFitness()]
         averageFitness = [generation.getAverageFitness()]
         allIterations = []
-
+        allIterations.append(IterationInfo(generation.getBestBackpacks(), maxFitness[-1], averageFitness[-1]))
         for generationNumber in range(1, self.parameters.maxAmountOfGenerations):
             print(f"------------------")
             print(f"Поколение №{generationNumber}")
