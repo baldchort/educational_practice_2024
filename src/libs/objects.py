@@ -17,7 +17,7 @@ class Backpack:
         self.weight = 0
 
     def __str__(self):
-        return ", ".join(map(str, self.genome))
+        return f"{self.genome}, стоимость = {self.cost}, вес = {self.weight}"
 
     def __iter__(self) -> Iterator:
         return iter(self.genome)
@@ -38,9 +38,12 @@ class Backpack:
         self.weight = sum(items[i].weight * self.genome[i] for i in range(len(items)))
 
     def calculateFitness(self, limitWeight: int, items: list[Item]) -> None:
-        self.cost = sum(
-            items[i].cost * self.genome[i] for i in range(len(items))) - 0 if self.weight < limitWeight else (
-                self.weight - limitWeight)
+        sumCost = sum(items[i].cost * self.genome[i] for i in range(len(items)))
+        if self.weight <= limitWeight:
+            self.cost = sumCost
+        else:
+            koeff = 1 - (self.weight - limitWeight) / limitWeight
+            self.cost = int(sumCost * koeff)
 
 
 class Generation:
@@ -77,7 +80,7 @@ class Generation:
     def getAverageFitness(self) -> float:
         return sum(backpack.cost for backpack in self.backpacks) / len(self.backpacks)
 
-    def getMaxFitness(self) -> float:
+    def getMaxFitness(self) -> int:
         return self.getBestBackpacks()[0].cost
 
     def calculateWeight(self, items: list[Item]) -> None:
@@ -105,7 +108,7 @@ class AlgorithmParameters:
 
 
 class IterationInfo:
-    def __init__(self, bestBackpacks: list[Backpack], currentMaxFitness: float, currentAverageFitness: float):
+    def __init__(self, bestBackpacks: list[Backpack], currentMaxFitness: int, currentAverageFitness: float):
         self.bestBackpacks = bestBackpacks
         self.currentMaxFitness = currentMaxFitness
         self.currentAverageFitness = currentAverageFitness
