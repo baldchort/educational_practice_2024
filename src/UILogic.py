@@ -16,7 +16,7 @@ from src.libs.genetic_algorithm import *
 
 class Data:
     def __init__(self):
-        self.algParams = AlgorithmParameters(100, 0.5, 0.5, 25, 50)
+        self.algParams = AlgorithmParameters(100, 0.9, 0.3, 25, 50)
         self.items = []
         self.geneticAlg = None
         self.iterationsInfo = list[IterationInfo]
@@ -28,6 +28,7 @@ class Data:
         self.algNum = -1
 
     def generateRandomItems(self):
+        self.items.clear()
         for i in range(self.randomGenerationBackpackValue):
             item = Item(random.randint(1, 50), random.randint(1, 50))
             self.items.append(item)
@@ -110,6 +111,7 @@ class UILogic:
         self.mainWindowUI.saveButton.clicked.connect(self.updateParams)
         self.mainWindowUI.forwardButton.clicked.connect(self.forwardButtonEvent)
         self.mainWindowUI.resultButton.clicked.connect(self.resultButtonEvent)
+        self.mainWindowUI.backButton.clicked.connect(self.backButtonEvent)
 
         self.handInputDialogUI.cancelButton.clicked.connect(self.closeHandInputDialogEvent)
 
@@ -117,6 +119,12 @@ class UILogic:
         self.randGenDialogUI.doneButton.clicked.connect(self.doneButtonEvent)
 
         self.mainWindowUI.resetDataButton.clicked.connect(self.resetButtonEvent)
+
+    def backButtonEvent(self):
+        if self.data.iteration <= 1:
+            return
+        self.data.iteration -= 1
+        self.iterateAlgorithm(self.data.iteration)
 
     def resultButtonEvent(self):
         self.data.iteration = self.data.algParams.maxAmountOfGenerations
@@ -134,8 +142,10 @@ class UILogic:
             int(self.mainWindowUI.entityAmountLE.text()),
             int(self.mainWindowUI.generationAmountLE.text())
         )
-
         self.data.algParams = new_params
+
+        if self.data.algNum != -1:
+            self.startAlgorithm()
 
     def openRandomGenDialog(self):
         self.randGenDialog.finished.connect(self.closeGenDialogEvent)
@@ -241,7 +251,7 @@ class UILogic:
         self.data.iteration = 0
         self.mainWindowUI.iterationDataFrame.setVisible(True)
         self.mainWindowUI.noDataLabel.setVisible(False)
-        self.mainWindowUI.backpackTableWidget.clear()
+        self.mainWindowUI.backpackTableWidget.clearContents()
         self.canvas.axes.clear()
         self.canvas.draw()
         self.mainWindowUI.backpackTableWidget.setRowCount(self.data.randomGenerationBackpackValue)
