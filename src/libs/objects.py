@@ -49,8 +49,6 @@ class Backpack:
 class Generation:
     def __init__(self, backpacks: list[Backpack]):
         self.backpacks = backpacks
-        self.maxFitness = 0
-        self.averageFitness = 0
 
     def __str__(self):
         return "\n".join(map(str, self.backpacks))
@@ -92,21 +90,6 @@ class Generation:
             backpack.calculateFitness(limitWeight, items)
 
 
-class AlgorithmParameters:
-    def __init__(self,
-                 maxBackpackWeight: int,
-                 crossingProbability: float,
-                 mutationProbability: float,
-                 amountOfIndividsPerGeneration: int,
-                 maxAmountOfGenerations: int):
-        self.maxBackpackWeight = maxBackpackWeight
-        self.crossingProbability = crossingProbability
-        self.mutationProbability = mutationProbability
-        self.amountOfIndividsPerGeneration = amountOfIndividsPerGeneration
-        self.maxAmountOfGenerations = maxAmountOfGenerations
-
-
-
 class IterationInfo:
     def __init__(self, bestBackpacks: list[Backpack], currentMaxFitness: int, currentAverageFitness: float):
         self.bestBackpacks = bestBackpacks
@@ -128,4 +111,3 @@ class IterationInfo:
 #
 #     def drawPlot(self) -> None:
 #         pass
-
