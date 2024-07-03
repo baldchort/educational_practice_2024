@@ -14,23 +14,21 @@ class GeneticAlgorithm:
         self.parameters = parameters
 
     def generateRandomBackpack(self) -> Backpack:
-        currentBackpackWeight = 0
-        availableItems = self.items
+        remainingWeight = self.parameters.maxBackpackWeight
+        availableItems = [i for i in range(len(self.items)) if
+                          self.items[i].weight <= remainingWeight]
         genome = [0] * len(self.items)
-        while len(availableItems) != 0:
-            item = random.choice(availableItems)
+        while availableItems and remainingWeight:
+            itemIndex = random.choice(availableItems)
+            item = self.items[itemIndex]
+            maxAmount = remainingWeight // item.weight
+            amount = maxAmount if (len(availableItems) == 1 or maxAmount == 1) \
+                else random.randint(1, maxAmount)
 
-            if len(availableItems) == 1:
-                amount = int((self.parameters.maxBackpackWeight - currentBackpackWeight) / item.weight)
-            else:
-                amount = random.randint(1, (self.parameters.maxBackpackWeight - currentBackpackWeight) // item.weight)
+            genome[itemIndex] += amount
+            remainingWeight -= amount * item.weight
 
-            ind = self.items.index(item)
-            genome[ind] += amount
-            currentBackpackWeight += amount * item.weight
-
-            availableItems = list(
-                filter(lambda x: x.weight <= self.parameters.maxBackpackWeight - currentBackpackWeight, availableItems))
+            availableItems = [i for i in availableItems if self.items[i].weight <= remainingWeight]
         return Backpack(genome)
 
     def generateRandomGeneration(self) -> Generation:
@@ -154,19 +152,6 @@ class GeneticAlgorithm:
     def dynamicProgrammingSolution(self) -> Backpack:
         pass
 
-    def drawPlot(self, maxFitness: list[float], averageFitness: list[float]) -> None:
-        x_len = self.parameters.maxAmountOfGenerations
-        plt.plot(list(range(x_len)), averageFitness, 'r-')
-        plt.plot(list(range(x_len)), maxFitness, 'b-')
-        plt.grid()
-        plt.xticks(np.arange(0, x_len + 1, 2))
-        # строчка ниже все ломает, хотя она должна задавать шаг рисок по оси oy
-        # plt.yticks(np.arange(min(maxFitness), max(maxFitness)+1, 5))
-        plt.xlabel('Поколение')
-        plt.ylabel('Приспособленность')
-        #plt.draw()
-        return plt
-
     def outputGenerationInfo(self, generation: Generation, generationNumber: int):
         print(f"\nПоколение №{generationNumber}:")
         sortedGeneration = sorted(generation, key=lambda x: x.cost, reverse=True)
@@ -186,6 +171,7 @@ class GeneticAlgorithm:
                 f"\tСуммарный вес вещей: {backpack.weight}, дельта = {self.parameters.maxBackpackWeight - backpack.weight}")
 
     def getSolution(self) -> list[IterationInfo]:
+        # if self.parameters.maxBackpackWeight < min(self.items)
         generation = self.generateRandomGeneration()
         print(f"Начальное случайно сгенерированное поколение:")
         self.outputBackpacks(generation.backpacks)
@@ -224,7 +210,7 @@ class GeneticAlgorithm:
 
             generation = self.eliteChoice(generation.backpacks, producedChildren)
 
-        self.drawPlot(maxFitness, averageFitness)
+        # self.drawPlot(maxFitness, averageFitness)
         return allIterations
 
 
@@ -240,8 +226,8 @@ class GeneticAlgorithm:
 
 
 if __name__ == '__main__':
-    items = [Item(5, 2), Item(7, 3), Item(6, 4), Item(3, 2)]
-    maxBackpackWeight = 9
+    items = [Item(4, 4), Item(7, 3), Item(6, 4), Item(3, 2)]
+    maxBackpackWeight = 4
     crossingProbability = 0.9
     mutationProbability = 0.2
     amountOfIndividsPerGeneration = 20

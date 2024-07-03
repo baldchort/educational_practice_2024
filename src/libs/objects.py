@@ -6,8 +6,14 @@ class Item:
         self.cost = cost
         self.weight = weight
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Вещь стоит {self.cost} и весит {self.weight}"
+
+    def __lt__(self, other: 'Item') -> bool:
+        return self.weight < other.weight
+
+    def __le__(self, other: 'Item') -> bool:
+        return self.weight <= other.weight
 
 
 class Backpack:
@@ -42,8 +48,8 @@ class Backpack:
         if self.weight <= limitWeight:
             self.cost = sumCost
         else:
-            koeff = 1 - (self.weight - limitWeight) / limitWeight
-            self.cost = int(sumCost * koeff)
+            penalty = (self.weight - limitWeight) / limitWeight
+            self.cost = sumCost / (1 + penalty ** 2)
 
 
 class Generation:
