@@ -16,20 +16,21 @@ from src.libs.genetic_algorithm import *
 
 class Data:
     def __init__(self):
-        self.algParams = AlgorithmParameters(100, 0.5, 0.5, 25, 50)
-        self.items = []
+        self.algParams = AlgorithmParameters(100, 0.9, 0.3, 25, 50)
         self.geneticAlg = None
         self.iterationsInfo = list[IterationInfo]
         self.iteration = 0
 
-        self.randomGenerationBackpackValue = -1
+        self.backpackAmount = -1
         self.inputFileName = ""
+        self.items = []
 
         self.algNum = -1
 
     def generateRandomItems(self):
-        for i in range(self.randomGenerationBackpackValue):
-            item = Item(random.randint(1, 50), random.randint(1, 50))
+        self.items.clear()
+        for i in range(self.backpackAmount):
+            item = Item(random.randint(1, 100), random.randint(1, 100))
             self.items.append(item)
 
 
@@ -42,7 +43,6 @@ class MplCanvas(FigureCanvas):
 
 class UILogic:
     def __init__(self):
-        self.canvas = MplCanvas(self, width=5, height=4, dpi=100)
         self.mainWindow = gui.MainWindow()
         self.mainWindowUI = self.mainWindow.mainWindowUI
 
@@ -53,12 +53,14 @@ class UILogic:
         self.handInputDialogUI = self.handInputDialog.handInputDialogUI
 
         self.data = Data()
+        self.canvas = MplCanvas(self, width=5, height=4, dpi=100)
 
         self.mainWindowUI.startButton.setEnabled(False)
         self.mainWindowUI.iterationDataFrame.setVisible(False)
+        self.mainWindowUI.iterationTabLayout.addWidget(self.canvas)
+
         self.connectButtons()
         self.adjustLineEdits()
-        self.mainWindowUI.iterationTabLayout.addWidget(self.canvas)
 
     def drawPlot(self, maxFitness: list[float], averageFitness: list[float], iter: int) -> None:
         # x_len = self.data.algParams.maxAmountOfGenerations
@@ -110,13 +112,51 @@ class UILogic:
         self.mainWindowUI.saveButton.clicked.connect(self.updateParams)
         self.mainWindowUI.forwardButton.clicked.connect(self.forwardButtonEvent)
         self.mainWindowUI.resultButton.clicked.connect(self.resultButtonEvent)
+        self.mainWindowUI.backButton.clicked.connect(self.backButtonEvent)
+        self.mainWindowUI.resetDataButton.clicked.connect(self.resetButtonEvent)
 
         self.handInputDialogUI.cancelButton.clicked.connect(self.closeHandInputDialogEvent)
+        self.handInputDialogUI.doneButton.clicked.connect(self.handInputDoneButtonEvent)
 
         self.randGenDialogUI.CancelButton.clicked.connect(self.closeGenDialogEvent)
-        self.randGenDialogUI.doneButton.clicked.connect(self.doneButtonEvent)
+        self.randGenDialogUI.doneButton.clicked.connect(self.randGenDoneButtonEvent)
 
-        self.mainWindowUI.resetDataButton.clicked.connect(self.resetButtonEvent)
+    def handInputDoneButtonEvent(self):
+        if self.isTableEmpty():
+            for i in range(self.handInputDialogUI.tableWidget.rowCount()):
+                weight = 0
+                cost = 0
+
+                if (self.handInputDialogUI.tableWidget.item(i, 0) is not None) and \
+                        self.handInputDialogUI.tableWidget.item(i, 0).text().isdigit():
+                    weight = int(self.handInputDialogUI.tableWidget.item(i, 0).text())
+                if (self.handInputDialogUI.tableWidget.item(i, 1) is not None) and \
+                        self.handInputDialogUI.tableWidget.item(i, 1).text().isdigit():
+                    cost = int(self.handInputDialogUI.tableWidget.item(i, 1).text())
+                new_item = Item(cost=cost, weight=weight)
+                self.data.items.append(new_item)
+            self.data.backpackAmount = int(self.handInputDialogUI.AmountLineEdit.text())
+            self.data.algNum = 3
+            self.switchAlgorithms(self.data.algNum)
+
+            self.mainWindowUI.startButton.setEnabled(True)
+            self.handInputDialog.close()
+
+    def isTableEmpty(self) -> bool:
+        for i in range(self.handInputDialogUI.tableWidget.rowCount()):
+            for j in range(self.handInputDialogUI.tableWidget.columnCount()):
+                if self.handInputDialogUI.tableWidget.item(i, j) is None or \
+                        not self.handInputDialogUI.tableWidget.item(i, j).text().isdigit():
+                    print("poop " + str(i) + str(j))
+                    return False
+        return True
+
+
+    def backButtonEvent(self):
+        if self.data.iteration <= 1:
+            return
+        self.data.iteration -= 1
+        self.iterateAlgorithm(self.data.iteration)
 
     def resultButtonEvent(self):
         self.data.iteration = self.data.algParams.maxAmountOfGenerations
@@ -134,8 +174,15 @@ class UILogic:
             int(self.mainWindowUI.entityAmountLE.text()),
             int(self.mainWindowUI.generationAmountLE.text())
         )
+        #self.data.algParams = new_params
+        self.data.algParams.maxBackpackWeight = int(self.mainWindowUI.backpackValueLE.text())
+        self.data.algParams.crossingProbability = float(self.mainWindowUI.crossingProbabilitySpin.value())
+        self.data.algParams.mutationProbability = float(self.mainWindowUI.mutationProbabilitySpin.value())
+        self.data.algParams.amountOfIndividsPerGeneration = int(self.mainWindowUI.entityAmountLE.text())
+        self.data.algParams.maxAmountOfGenerations = int(self.mainWindowUI.generationAmountLE.text())
 
-        self.data.algParams = new_params
+        #if self.data.algNum != -1:
+            #self.startAlgorithm()
 
     def openRandomGenDialog(self):
         self.randGenDialog.finished.connect(self.closeGenDialogEvent)
@@ -169,14 +216,16 @@ class UILogic:
 
     def resetButtonEvent(self):
         self.data.algNum = -1
+        self.data.items.clear()
 
         self.data.inputFileName = ""
-        self.data.randomGenerationBackpackValue = -1
+        self.data.backpackAmount = -1
 
         self.switchAlgorithms(self.data.algNum)
 
     def openHandInputDialog(self):
-        # self.switchAllButtons(False)
+        self.mainWindow.setEnabled(False)
+
         self.handInputDialog.show()
         self.handInputDialog.finished.connect(self.closeHandInputDialogEvent)
         self.handInputDialogUI.AmountLineEdit.textEdited.connect(self.handInputTextChanged)
@@ -184,11 +233,11 @@ class UILogic:
     def handInputTextChanged(self):
         text = self.handInputDialogUI.AmountLineEdit.text()
 
-        self.handInputDialogUI.tableWidget.setRowCount(int(text))
+        if text != "":
+            self.handInputDialogUI.tableWidget.setRowCount(int(text))
 
     def switchAllButtons(self, state: bool):
         self.mainWindowUI.inputButton.setEnabled(state)
-        # self.mainWindowUI.startButton.setEnabled(state)
         self.mainWindowUI.browseButton.setEnabled(state)
         self.mainWindowUI.backButton.setEnabled(state)
         self.mainWindowUI.forwardButton.setEnabled(state)
@@ -196,21 +245,24 @@ class UILogic:
         self.mainWindowUI.randomGenButton.setEnabled(state)
 
     def closeHandInputDialogEvent(self):
+        self.mainWindow.setEnabled(True)
         self.handInputDialog.close()
-        # self.switchAllButtons(True)
 
     def closeGenDialogEvent(self):
-        if self.randGenDialogUI.AmountLineEdit.text() != "" and self.data.randomGenerationBackpackValue != -1:
-            self.randGenDialogUI.AmountLineEdit.setText(str(self.data.randomGenerationBackpackValue))
+        if self.randGenDialogUI.AmountLineEdit.text() != "" and self.data.backpackAmount != -1:
+            self.randGenDialogUI.AmountLineEdit.setText(str(self.data.backpackAmount))
 
         self.randGenDialog.close()
         self.mainWindow.setEnabled(True)
 
-    def doneButtonEvent(self):
+    def randGenDoneButtonEvent(self):
         if self.randGenDialogUI.AmountLineEdit.text() != "":
             self.data.algNum = 1
-            self.data.randomGenerationBackpackValue = int(self.randGenDialogUI.AmountLineEdit.text())
             self.switchAlgorithms(self.data.algNum)
+
+            self.data.backpackAmount = int(self.randGenDialogUI.AmountLineEdit.text())
+
+            self.data.generateRandomItems()
 
             self.randGenDialog.close()
             self.mainWindowUI.startButton.setEnabled(True)
@@ -241,13 +293,12 @@ class UILogic:
         self.data.iteration = 0
         self.mainWindowUI.iterationDataFrame.setVisible(True)
         self.mainWindowUI.noDataLabel.setVisible(False)
-        self.mainWindowUI.backpackTableWidget.clear()
+        self.mainWindowUI.backpackTableWidget.clearContents()
         self.canvas.axes.clear()
         self.canvas.draw()
-        self.mainWindowUI.backpackTableWidget.setRowCount(self.data.randomGenerationBackpackValue)
+        self.mainWindowUI.backpackTableWidget.setRowCount(self.data.backpackAmount)
         self.mainWindowUI.iterationNumLabel.setText("0")
 
-        self.data.generateRandomItems()
         self.data.geneticAlg = GeneticAlgorithm(self.data.items, self.data.algParams)
 
         self.data.iterationsInfo = self.data.geneticAlg.getSolution()
@@ -257,10 +308,9 @@ class UILogic:
             self.mainWindowUI.backpackTableWidget.setItem(i, 1, QTableWidgetItem(str(self.data.items[i].cost)))
 
     def iterateAlgorithm(self, iter: int):
-        # iteration = int(self.mainWindowUI.iterationNumLabel.text()) + 1
         iteration = iter
         print(iteration)
-        if (iteration <= self.data.algParams.maxAmountOfGenerations):
+        if iteration <= len(self.data.iterationsInfo):
             self.mainWindowUI.iterationNumLabel.setText(str(iteration))
             for i in range(self.mainWindowUI.backpackTableWidget.rowCount()):
                 for j in range(3):
