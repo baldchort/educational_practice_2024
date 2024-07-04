@@ -360,7 +360,7 @@ class UILogic:
 
     def iterateAlgorithm(self, iter: int):
         iteration = iter
-        print(iteration)
+        # print(iteration)
         if iteration <= len(self.data.iterationsInfo):
             self.mainWindowUI.iterationNumLabel.setText(str(iteration))
             for i in range(self.mainWindowUI.backpackTableWidget.rowCount()):

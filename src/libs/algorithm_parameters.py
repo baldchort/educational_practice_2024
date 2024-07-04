@@ -1,4 +1,11 @@
 from src.libs.objects import *
+from prettytable import PrettyTable
+
+
+generationNum = 1
+mutationNum = 1
+discreteRecomb = 1
+log = 0
 
 
 class AlgorithmParameters:
