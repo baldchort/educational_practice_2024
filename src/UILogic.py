@@ -64,18 +64,16 @@ class Data:
 
     def readItemsFromFile(self) -> bool:
         self.items.clear()
+        self.backpackAmount = 0
         with open(self.inputFileName, 'r') as file:
             lines = file.readlines()
             if len(lines) < 1:
                 return False
-            try:
-                self.backpackAmount = int(lines[0])
-            except ValueError:
-                return False
-            for line in lines[1:]:
+            for line in lines:
                 try:
-                    cost, weight = line.split()
+                    weight, cost = line.split()
                     self.items.append(Item(int(cost), int(weight)))
+                    self.backpackAmount += 1
                 except ValueError:
                     self.items.clear()
                     return False
@@ -112,7 +110,6 @@ class UILogic:
         self.adjustLineEdits()
 
     def drawPlot(self, maxFitness: list[float], averageFitness: list[float], iter: int) -> None:
-        # x_len = self.data.algParams.maxAmountOfGenerations
         x_len = iter
         self.canvas.axes.clear()
 
@@ -211,14 +208,17 @@ class UILogic:
         self.iterateAlgorithm(self.data.iteration)
 
     def forwardButtonEvent(self):
-        self.data.iteration += 1
+        self.data.iteration += 1 if self.data.iteration < self.data.algParams.maxAmountOfGenerations else 0
         self.iterateAlgorithm(self.data.iteration)
 
     def updateParams(self):
         self.data.algParams.maxBackpackWeight = int(self.mainWindowUI.backpackValueLE.text())
         self.data.algParams.crossingProbability = float(self.mainWindowUI.crossingProbabilitySpin.value())
         self.data.algParams.mutationProbability = float(self.mainWindowUI.mutationProbabilitySpin.value())
-        self.data.algParams.amountOfIndividsPerGeneration = int(self.mainWindowUI.entityAmountLE.text())
+        if int(self.mainWindowUI.entityAmountLE.text()) < 3:
+            self.data.algParams.amountOfIndividsPerGeneration = 3
+        else:
+            self.data.algParams.amountOfIndividsPerGeneration = int(self.mainWindowUI.entityAmountLE.text())
         self.data.algParams.maxAmountOfGenerations = int(self.mainWindowUI.generationAmountLE.text())
         self.data.algParams.crossingStrategy = \
             self.data.crossing_strategies[self.mainWindowUI.crossing_method_comboBox.currentData(0)]
