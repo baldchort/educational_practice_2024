@@ -188,24 +188,17 @@ class UILogic:
         self.iterateAlgorithm(self.data.iteration)
 
     def updateParams(self):
-        # втф, а зачем вообще этот объект?
-        new_params = AlgorithmParameters(
-            int(self.mainWindowUI.backpackValueLE.text()),
-            float(self.mainWindowUI.crossingProbabilitySpin.value()),
-            float(self.mainWindowUI.mutationProbabilitySpin.value()),
-            int(self.mainWindowUI.entityAmountLE.text()),
-            int(self.mainWindowUI.generationAmountLE.text()),
-            TournamentSelection,
-            UniformCrossing,
-            MutationStrategy,
-            EliteSelection
-        )
-        # self.data.algParams = new_params
         self.data.algParams.maxBackpackWeight = int(self.mainWindowUI.backpackValueLE.text())
         self.data.algParams.crossingProbability = float(self.mainWindowUI.crossingProbabilitySpin.value())
         self.data.algParams.mutationProbability = float(self.mainWindowUI.mutationProbabilitySpin.value())
         self.data.algParams.amountOfIndividsPerGeneration = int(self.mainWindowUI.entityAmountLE.text())
         self.data.algParams.maxAmountOfGenerations = int(self.mainWindowUI.generationAmountLE.text())
+        self.data.algParams.crossingStrategy = self.mainWindowUI.crossing_method_comboBox.currentData(0)
+        self.data.algParams.generationSelectionStrategy = \
+            self.mainWindowUI.methodOfSelectingIndividsComboBox.currentData(0)
+        self.data.algParams.parentsSelectionStrategy = self.mainWindowUI.parent_selection_comboBox.currentData(0)
+        self.data.algParams.mutationStrategy = self.mainWindowUI.mutation_method_comboBox.currentData(0)
+
 
         # if self.data.algNum != -1:
         # self.startAlgorithm()
