@@ -36,3 +36,17 @@ class EliteSelection(GenerationSelectionStrategy):
                 f"\tСуммарный вес вещей: {backpack.weight}, дельта = {algorithmParameters.maxBackpackWeight - backpack.weight}")
 
         return Generation(generation)
+
+
+class TruncationSelection(GenerationSelectionStrategy):
+    def select(self, selectedParents: list[Backpack], producedChildren: list[Backpack],
+               algorithmParameters: AlgorithmParameters, items: list[Item]) -> Generation:
+        # impl
+        pass
+
+
+class ExclusionSelection(GenerationSelectionStrategy):
+    def select(self, selectedParents: list[Backpack], producedChildren: list[Backpack],
+               algorithmParameters: AlgorithmParameters, items: list[Item]) -> Generation:
+        # impl
+        pass
