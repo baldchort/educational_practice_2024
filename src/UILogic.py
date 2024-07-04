@@ -1,13 +1,10 @@
 import os
-import random
 import sys
 
-import numpy as np
 from PyQt6 import QtWidgets
 from PyQt6.QtGui import QIntValidator
 from PyQt6.QtWidgets import QFileDialog, QTableWidgetItem
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-
 from matplotlib.figure import Figure
 
 import gui
@@ -16,7 +13,9 @@ from src.libs.genetic_algorithm import *
 
 class Data:
     def __init__(self):
-        self.algParams = AlgorithmParameters(100, 0.9, 0.3, 25, 50)
+        self.algParams = AlgorithmParameters(100, 0.9, 0.3, 25, 50,
+                                             "Турнир", "Равномерное скрещивание",
+                                             "Плотность мутации", "Элитарный отбор")
         self.geneticAlg = None
         self.iterationsInfo = list[IterationInfo]
         self.iteration = 0
@@ -27,14 +26,38 @@ class Data:
 
         self.algNum = -1
 
-    def generateRandomItems(self):
+    def generateRandomItems(self) -> None:
         self.items.clear()
         for i in range(self.backpackAmount):
             item = Item(random.randint(1, 100), random.randint(1, 100))
             self.items.append(item)
 
+    # Метод для считывания данных из файла. Совмещает считывание и проверку данных.
+    # По хорошему, методы ввода данных вынести из логики Data'ы.
+    # print нужно будет заменить на вывод замечания в приложении.
+    # Успешность считывания как раз можно использовать для этого
+    def readItemsFromFile(self, filepath: str) -> bool:
+        # Если физически возможно передать путь на несуществующий/неоткрывающийся файл
+        # то нужно обернуть всё тело в try ... except: return False
+        self.items.clear()
+        with open(filepath, 'r') as file:
+            lines = file.readlines()
+            if len(lines) < 1:
+                print("Говно ваш файл")
+                return False
+            for line in lines:
+                cost, weight = line.split()
+                try:
+                    self.items.append(Item(int(cost), int(weight)))
+                except ValueError:
+                    print("Говно ваш файл")
+                    self.items.clear()
+                    return False
+        return True
+
 
 class MplCanvas(FigureCanvas):
+    # зачем аргумент parent?
     def __init__(self, parent=None, width=5, height=4, dpi=100):
         fig = Figure(figsize=(width, height), dpi=dpi)
         self.axes = fig.add_subplot(111)
@@ -75,7 +98,7 @@ class UILogic:
         self.canvas.axes.grid()
 
         # Устанавливаем метки по оси X
-        self.canvas.axes.set_xticks(np.arange(0, x_len + 1, 2))
+        self.canvas.axes.set_xticks(np.arange(0, x_len + 1, x_len % 10))
 
         # Устанавливаем метки по оси Y
         max_fitness_value = max(maxFitness)
@@ -151,7 +174,6 @@ class UILogic:
                     return False
         return True
 
-
     def backButtonEvent(self):
         if self.data.iteration <= 1:
             return
@@ -167,22 +189,19 @@ class UILogic:
         self.iterateAlgorithm(self.data.iteration)
 
     def updateParams(self):
-        new_params = AlgorithmParameters(
-            int(self.mainWindowUI.backpackValueLE.text()),
-            float(self.mainWindowUI.crossingProbabilitySpin.value()),
-            float(self.mainWindowUI.mutationProbabilitySpin.value()),
-            int(self.mainWindowUI.entityAmountLE.text()),
-            int(self.mainWindowUI.generationAmountLE.text())
-        )
-        #self.data.algParams = new_params
         self.data.algParams.maxBackpackWeight = int(self.mainWindowUI.backpackValueLE.text())
         self.data.algParams.crossingProbability = float(self.mainWindowUI.crossingProbabilitySpin.value())
         self.data.algParams.mutationProbability = float(self.mainWindowUI.mutationProbabilitySpin.value())
         self.data.algParams.amountOfIndividsPerGeneration = int(self.mainWindowUI.entityAmountLE.text())
         self.data.algParams.maxAmountOfGenerations = int(self.mainWindowUI.generationAmountLE.text())
+        self.data.algParams.crossingStrategy = self.mainWindowUI.crossing_method_comboBox.currentData(0)
+        self.data.algParams.generationSelectionStrategy = \
+            self.mainWindowUI.methodOfSelectingIndividsComboBox.currentData(0)
+        self.data.algParams.parentsSelectionStrategy = self.mainWindowUI.parent_selection_comboBox.currentData(0)
+        self.data.algParams.mutationStrategy = self.mainWindowUI.mutation_method_comboBox.currentData(0)
 
-        #if self.data.algNum != -1:
-            #self.startAlgorithm()
+        # if self.data.algNum != -1:
+        # self.startAlgorithm()
 
     def openRandomGenDialog(self):
         self.randGenDialog.finished.connect(self.closeGenDialogEvent)

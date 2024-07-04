@@ -6,20 +6,9 @@ class Item:
         self.cost = cost
         self.weight = weight
 
-    def __str__(self) -> str:
+    def __str__(self):
         return f"Вещь стоит {self.cost} и весит {self.weight}"
 
-    def __lt__(self, other: 'Item') -> bool:
-        return self.weight < other.weight
-
-    def __le__(self, other: 'Item') -> bool:
-        return self.weight <= other.weight
-
-    def __gt__(self, other: 'Item') -> bool:
-        return self.weight > other.weight
-
-    def __ge__(self, other: 'Item') -> bool:
-        return self.weight >= other.weight
 
 class Backpack:
     def __init__(self, amountOfEachItems: list[int]):
@@ -50,12 +39,11 @@ class Backpack:
 
     def calculateFitness(self, limitWeight: int, items: list[Item]) -> None:
         sumCost = sum(items[i].cost * self.genome[i] for i in range(len(items)))
-        overload = self.weight - limitWeight
-        if overload <= 0:
+        if self.weight <= limitWeight:
             self.cost = sumCost
         else:
-            penalty = (self.weight - limitWeight) / limitWeight
-            self.cost = int(sumCost * (1 - penalty ** 2)) if overload <= max(item.weight for item in items) else 0
+            koeff = 1 - (self.weight - limitWeight) / limitWeight
+            self.cost = int(sumCost * koeff)
 
 
 class Generation:
@@ -107,3 +95,19 @@ class IterationInfo:
         self.bestBackpacks = bestBackpacks
         self.currentMaxFitness = currentMaxFitness
         self.currentAverageFitness = currentAverageFitness
+
+# class AllInfo:
+#     def __init__(self, maxBackpackWeight: int, items: list[Item]):
+#         self.maxBackpackWeight = maxBackpackWeight
+#         self.items = items
+#         self.maxFitness = []
+#         self.averageFitness = []
+#
+#     def appendMaxFitness(self, iteration: IterationInfo) -> None:
+#         self.maxFitness.append(iteration.currentMaxFitness)
+#
+#     def appendAverageFitness(self, iteration: IterationInfo) -> None:
+#         self.averageFitness.append(iteration.currentAverageFitness)
+#
+#     def drawPlot(self) -> None:
+#         pass
