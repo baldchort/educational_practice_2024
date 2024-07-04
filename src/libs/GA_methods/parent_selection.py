@@ -36,7 +36,7 @@ class RouletteSelection(ParentSelectionStrategy):
         pass
 
 
-class OutbreedingSelection(ParentSelectionStrategy):
+class InbreedingSelection(ParentSelectionStrategy):
     def selectParent(self, generation, algorithmParameters):
         # Реализация метода
         pass

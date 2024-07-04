@@ -75,7 +75,8 @@ class Ui_MainWindow(object):
         self.genAmountLabel.setObjectName("genAmountLabel")
         self.algParams.addWidget(self.genAmountLabel)
         self.generationAmountLE = QtWidgets.QLineEdit(parent=self.horizontalLayoutWidget_2)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding,
+                                           QtWidgets.QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.generationAmountLE.sizePolicy().hasHeightForWidth())
@@ -86,7 +87,8 @@ class Ui_MainWindow(object):
         self.entityAmountLabel.setObjectName("entityAmountLabel")
         self.algParams.addWidget(self.entityAmountLabel)
         self.entityAmountLE = QtWidgets.QLineEdit(parent=self.horizontalLayoutWidget_2)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding,
+                                           QtWidgets.QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.entityAmountLE.sizePolicy().hasHeightForWidth())
@@ -195,7 +197,8 @@ class Ui_MainWindow(object):
         self.DataLabel.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.DataLabel.setObjectName("DataLabel")
         self.DataLayout.addWidget(self.DataLabel)
-        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
+        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum,
+                                           QtWidgets.QSizePolicy.Policy.Expanding)
         self.DataLayout.addItem(spacerItem)
         self.randomGenButton = QtWidgets.QPushButton(parent=self.verticalLayoutWidget_2)
         self.randomGenButton.setObjectName("randomGenButton")
@@ -206,12 +209,14 @@ class Ui_MainWindow(object):
         self.inputButton = QtWidgets.QPushButton(parent=self.verticalLayoutWidget_2)
         self.inputButton.setObjectName("inputButton")
         self.DataLayout.addWidget(self.inputButton)
-        spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
+        spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum,
+                                            QtWidgets.QSizePolicy.Policy.Expanding)
         self.DataLayout.addItem(spacerItem1)
         self.resetDataButton = QtWidgets.QPushButton(parent=self.verticalLayoutWidget_2)
         self.resetDataButton.setObjectName("resetDataButton")
         self.DataLayout.addWidget(self.resetDataButton)
-        spacerItem2 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
+        spacerItem2 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum,
+                                            QtWidgets.QSizePolicy.Policy.Expanding)
         self.DataLayout.addItem(spacerItem2)
         self.verticalLayout.addWidget(self.dataFrame)
         self.gridLayout.addLayout(self.verticalLayout, 0, 0, 1, 1)
@@ -245,7 +250,8 @@ class Ui_MainWindow(object):
         self.iterationTabLayout.setObjectName("iterationTabLayout")
         self.iterationLabelLayout = QtWidgets.QHBoxLayout()
         self.iterationLabelLayout.setObjectName("iterationLabelLayout")
-        spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
+        spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding,
+                                            QtWidgets.QSizePolicy.Policy.Minimum)
         self.iterationLabelLayout.addItem(spacerItem3)
         self.iterationLabel = QtWidgets.QLabel(parent=self.verticalLayoutWidget_3)
         self.iterationLabel.setObjectName("iterationLabel")
@@ -253,11 +259,13 @@ class Ui_MainWindow(object):
         self.iterationNumLabel = QtWidgets.QLabel(parent=self.verticalLayoutWidget_3)
         self.iterationNumLabel.setObjectName("iterationNumLabel")
         self.iterationLabelLayout.addWidget(self.iterationNumLabel)
-        spacerItem4 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
+        spacerItem4 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding,
+                                            QtWidgets.QSizePolicy.Policy.Minimum)
         self.iterationLabelLayout.addItem(spacerItem4)
         self.iterationTabLayout.addLayout(self.iterationLabelLayout)
         self.backpackTableWidget = QtWidgets.QTableWidget(parent=self.verticalLayoutWidget_3)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding,
+                                           QtWidgets.QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.backpackTableWidget.sizePolicy().hasHeightForWidth())
@@ -423,7 +431,7 @@ class Ui_MainWindow(object):
         self.parent_selection_method_label.setText(_translate("MainWindow", "Cпособ отбора родителей"))
         self.parent_selection_comboBox.setItemText(0, _translate("MainWindow", "Турнир"))
         self.parent_selection_comboBox.setItemText(1, _translate("MainWindow", "Рулетка"))
-        self.parent_selection_comboBox.setItemText(2, _translate("MainWindow", "Аутбридинг"))
+        self.parent_selection_comboBox.setItemText(2, _translate("MainWindow", "Инбридинг"))
         self.crossing_method_label.setText(_translate("MainWindow", "Способ скрещевания"))
         self.crossing_method_comboBox.setItemText(0, _translate("MainWindow", "Равномерное скрещевание"))
         self.crossing_method_comboBox.setItemText(1, _translate("MainWindow", "Дискретная рекомбинация"))
@@ -432,7 +440,8 @@ class Ui_MainWindow(object):
         self.mutation_method_comboBox.setItemText(0, _translate("MainWindow", "Плотность мутации"))
         self.mutation_method_comboBox.setItemText(1, _translate("MainWindow", "Мутация перестановкой"))
         self.mutation_method_comboBox.setItemText(2, _translate("MainWindow", "Мутация обменом"))
-        self.methodOfSelectingIndividsLabel.setText(_translate("MainWindow", "Cпособ отбора особей в следующее поколение"))
+        self.methodOfSelectingIndividsLabel.setText(
+            _translate("MainWindow", "Cпособ отбора особей в следующее поколение"))
         self.methodOfSelectingIndividsComboBox.setItemText(0, _translate("MainWindow", "Элитарный отбор"))
         self.methodOfSelectingIndividsComboBox.setItemText(1, _translate("MainWindow", "Отбор вытеснением"))
         self.methodOfSelectingIndividsComboBox.setItemText(2, _translate("MainWindow", "Отбор усечением"))
@@ -443,7 +452,8 @@ class Ui_MainWindow(object):
         self.browseButton.setText(_translate("MainWindow", "Загрузить из файла"))
         self.inputButton.setText(_translate("MainWindow", "Ввести вручную"))
         self.resetDataButton.setText(_translate("MainWindow", "Сбросить данные"))
-        self.iterationTabWidget_2.setTabText(self.iterationTabWidget_2.indexOf(self.instructionTab_2), _translate("MainWindow", "Инструкция"))
+        self.iterationTabWidget_2.setTabText(self.iterationTabWidget_2.indexOf(self.instructionTab_2),
+                                             _translate("MainWindow", "Инструкция"))
         self.noDataLabel.setText(_translate("MainWindow", "Нет данных"))
         self.iterationLabel.setText(_translate("MainWindow", "Итерация номер "))
         self.iterationNumLabel.setText(_translate("MainWindow", "0"))
@@ -479,12 +489,14 @@ class Ui_MainWindow(object):
         self.curWeightLabel_3.setText(_translate("MainWindow", "-1"))
         self.textFreeSpacLabel_3.setText(_translate("MainWindow", "Оставшееся свободное место:"))
         self.freeSpaveLabel_3.setText(_translate("MainWindow", "-1"))
-        self.iterationTabWidget_2.setTabText(self.iterationTabWidget_2.indexOf(self.iterationTab_2), _translate("MainWindow", "Итерация алгоритма"))
+        self.iterationTabWidget_2.setTabText(self.iterationTabWidget_2.indexOf(self.iterationTab_2),
+                                             _translate("MainWindow", "Итерация алгоритма"))
         self.startButton.setText(_translate("MainWindow", "Запуск"))
 
 
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()

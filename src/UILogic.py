@@ -16,7 +16,7 @@ class Data:
         self.parent_selection_strategies = {
             "Турнир": TournamentSelection(),
             "Рулетка": RouletteSelection(),
-            "Аутбридинг": OutbreedingSelection()
+            "Инбридинг": InbreedingSelection()
         }
 
         self.crossing_strategies = {
