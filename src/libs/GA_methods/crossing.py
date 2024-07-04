@@ -45,3 +45,17 @@ class UniformCrossing(CrossingStrategy):
             elif len(producedChildren) < 2:
                 print("Скрещивание не проводится")
         return producedChildren
+
+
+class DiscreteRecombination(CrossingStrategy):
+    def crossing(self, selectedParents: list[Backpack], algorithmParameters: AlgorithmParameters,
+                 items: list[Item]) -> list[Backpack]:
+        # Сюда реализацию нужно допилить
+        pass
+
+
+class IntermediateRecombination(CrossingStrategy):
+    def crossing(self, selectedParents: list[Backpack], algorithmParameters: AlgorithmParameters,
+                 items: list[Item]) -> list[Backpack]:
+        # реализация
+        pass

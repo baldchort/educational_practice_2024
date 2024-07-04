@@ -28,3 +28,15 @@ class TournamentSelection(ParentSelectionStrategy):
                 print(f"\tВыбираем лучшую из них: {selectedParents[-1].genome}")
 
         return selectedParents
+
+
+class RouletteSelection(ParentSelectionStrategy):
+    def selectParent(self, generation, algorithmParameters):
+        # Реализация метода
+        pass
+
+
+class OutbreedingSelection(ParentSelectionStrategy):
+    def selectParent(self, generation, algorithmParameters):
+        # Реализация метода
+        pass

@@ -431,7 +431,7 @@ class Ui_MainWindow(object):
         self.mutation_method_label.setText(_translate("MainWindow", "Способ мутации"))
         self.mutation_method_comboBox.setItemText(0, _translate("MainWindow", "Плотность мутации"))
         self.mutation_method_comboBox.setItemText(1, _translate("MainWindow", "Мутация перестановкой"))
-        self.mutation_method_comboBox.setItemText(2, _translate("MainWindow", "Мутация случайной заменой"))
+        self.mutation_method_comboBox.setItemText(2, _translate("MainWindow", "Мутация обменом"))
         self.methodOfSelectingIndividsLabel.setText(_translate("MainWindow", "Cпособ отбора особей в следующее поколение"))
         self.methodOfSelectingIndividsComboBox.setItemText(0, _translate("MainWindow", "Элитарный отбор"))
         self.methodOfSelectingIndividsComboBox.setItemText(1, _translate("MainWindow", "Отбор вытеснением"))

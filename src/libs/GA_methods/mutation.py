@@ -46,3 +46,15 @@ class DensityMutation(MutationStrategy):
         for i in range(len(children)):
             if random.random() < algorithmParameters.mutationProbability:
                 self.mutationOneChild(children[i], algorithmParameters, items)
+
+
+class PermutationMutation(MutationStrategy):
+    def mutation(self, children: list[Backpack], algorithmParameters: AlgorithmParameters, items: list[Item]) -> None:
+        # impl
+        pass
+
+
+class ExchangeMutation(MutationStrategy):
+    def mutation(self, children: list[Backpack], algorithmParameters: AlgorithmParameters, items: list[Item]) -> None:
+        # impl
+        pass

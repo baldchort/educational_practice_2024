@@ -13,8 +13,39 @@ from src.libs.genetic_algorithm import *
 
 class Data:
     def __init__(self):
-        self.algParams = AlgorithmParameters(100, 0.9, 0.3, 25, 50, TournamentSelection, UniformCrossing,
-                                             MutationStrategy, EliteSelection)
+        self.parent_selection_strategies = {
+            "Турнир": TournamentSelection(),
+            "Рулетка": RouletteSelection(),
+            "Аутбридинг": OutbreedingSelection()
+        }
+
+        self.crossing_strategies = {
+            "Равномерное скрещевание": UniformCrossing(),
+            "Дискретная рекомбинация": DiscreteRecombination(),
+            "Промежуточная рекомбинация": IntermediateRecombination()
+        }
+
+        self.mutation_strategies = {
+            "Плотность мутации": DensityMutation(),
+            "Мутация перестановкой": PermutationMutation(),
+            "Мутация обменом": ExchangeMutation()
+        }
+
+        self.generation_selection_strategies = {
+            "Элитарный отбор": EliteSelection(),
+            "Отбор вытеснением": ExclusionSelection(),
+            "Отбор усечением": TruncationSelection()
+        }
+
+        self.algParams = AlgorithmParameters(100,
+                                             0.9,
+                                             0.3,
+                                             25,
+                                             50,
+                                             self.parent_selection_strategies["Турнир"],
+                                             self.crossing_strategies["Равномерное скрещевание"],
+                                             self.mutation_strategies["Плотность мутации"],
+                                             self.generation_selection_strategies["Элитарный отбор"])
         self.geneticAlg = None
         self.iterationsInfo = list[IterationInfo]
         self.iteration = 0
@@ -35,11 +66,11 @@ class Data:
     # По хорошему, методы ввода данных вынести из логики Data'ы.
     # print нужно будет заменить на вывод замечания в приложении.
     # Успешность считывания как раз можно использовать для этого
-    def readItemsFromFile(self, filepath: str) -> bool:
+    def readItemsFromFile(self) -> bool:
         # Если физически возможно передать путь на несуществующий/неоткрывающийся файл
         # то нужно обернуть всё тело в try ... except: return False
         self.items.clear()
-        with open(filepath, 'r') as file:
+        with open(self.inputFileName, 'r') as file:
             lines = file.readlines()
             if len(lines) < 1:
                 print("Говно ваш файл")
@@ -97,7 +128,7 @@ class UILogic:
         self.canvas.axes.grid()
 
         # Устанавливаем метки по оси X
-        self.canvas.axes.set_xticks(np.arange(0, x_len + 1, x_len % 10))
+        self.canvas.axes.set_xticks(np.arange(0, x_len + 1, 2))
 
         # Устанавливаем метки по оси Y
         max_fitness_value = max(maxFitness)
@@ -193,15 +224,17 @@ class UILogic:
         self.data.algParams.mutationProbability = float(self.mainWindowUI.mutationProbabilitySpin.value())
         self.data.algParams.amountOfIndividsPerGeneration = int(self.mainWindowUI.entityAmountLE.text())
         self.data.algParams.maxAmountOfGenerations = int(self.mainWindowUI.generationAmountLE.text())
-        self.data.algParams.crossingStrategy = self.mainWindowUI.crossing_method_comboBox.currentData(0)
+        self.data.algParams.crossingStrategy = \
+            self.data.crossing_strategies[self.mainWindowUI.crossing_method_comboBox.currentData(0)]
+
         self.data.algParams.generationSelectionStrategy = \
-            self.mainWindowUI.methodOfSelectingIndividsComboBox.currentData(0)
-        self.data.algParams.parentsSelectionStrategy = self.mainWindowUI.parent_selection_comboBox.currentData(0)
-        self.data.algParams.mutationStrategy = self.mainWindowUI.mutation_method_comboBox.currentData(0)
+            self.data.generation_selection_strategies[self.mainWindowUI.methodOfSelectingIndividsComboBox.currentData(0)]
 
+        self.data.algParams.parentsSelectionStrategy = \
+            self.data.parent_selection_strategies[self.mainWindowUI.parent_selection_comboBox.currentData(0)]
 
-        # if self.data.algNum != -1:
-        # self.startAlgorithm()
+        self.data.algParams.mutationStrategy = \
+            self.data.mutation_strategies[self.mainWindowUI.mutation_method_comboBox.currentData(0)]
 
     def openRandomGenDialog(self):
         self.randGenDialog.finished.connect(self.closeGenDialogEvent)

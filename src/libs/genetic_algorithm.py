@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from src.libs.algorithm_parameters import *
 from src.libs.GA_methods.crossing import *
 from src.libs.GA_methods.generation_selection import *
 from src.libs.GA_methods.mutation import *
@@ -71,7 +70,6 @@ class GeneticAlgorithm:
             generation = self.generationSelectionStrategy.select(selectedParents, producedChildren,
                                                                  self.algorithmParameters, self.items)
 
-        # self.drawPlot(maxFitness, averageFitness)
         return allIterations
 
     def drawPlot(self, maxFitness: list[int], averageFitness: list[float]) -> None:
