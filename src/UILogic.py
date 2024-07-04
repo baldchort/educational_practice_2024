@@ -20,7 +20,7 @@ class Data:
         }
 
         self.crossing_strategies = {
-            "Равномерное скрещевание": UniformCrossing(),
+            "Равномерное скрещивание": UniformCrossing(),
             "Дискретная рекомбинация": DiscreteRecombination(),
             "Промежуточная рекомбинация": IntermediateRecombination()
         }
@@ -43,7 +43,7 @@ class Data:
                                              25,
                                              50,
                                              self.parent_selection_strategies["Турнир"],
-                                             self.crossing_strategies["Равномерное скрещевание"],
+                                             self.crossing_strategies["Равномерное скрещивание"],
                                              self.mutation_strategies["Плотность мутации"],
                                              self.generation_selection_strategies["Элитарный отбор"])
         self.geneticAlg = None
