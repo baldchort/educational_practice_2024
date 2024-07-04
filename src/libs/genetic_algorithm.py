@@ -45,6 +45,7 @@ class GeneticAlgorithm:
         return randomGeneration
 
     def getSolution(self) -> list[IterationInfo]:
+        # if self.parameters.maxBackpackWeight < min(self.items)
         generation = self.generateRandomGeneration()
         print(f"Начальное случайно сгенерированное поколение:")
         self.outputBackpacks(generation.backpacks)
@@ -70,7 +71,7 @@ class GeneticAlgorithm:
             generation = self.generationSelectionStrategy.select(selectedParents, producedChildren,
                                                                  self.algorithmParameters, self.items)
 
-        self.drawPlot(maxFitness, averageFitness)
+        # self.drawPlot(maxFitness, averageFitness)
         return allIterations
 
     def drawPlot(self, maxFitness: list[int], averageFitness: list[float]) -> None:

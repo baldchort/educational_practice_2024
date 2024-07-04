@@ -6,9 +6,20 @@ class Item:
         self.cost = cost
         self.weight = weight
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Вещь стоит {self.cost} и весит {self.weight}"
 
+    def __lt__(self, other: 'Item') -> bool:
+        return self.weight < other.weight
+
+    def __le__(self, other: 'Item') -> bool:
+        return self.weight <= other.weight
+
+    def __gt__(self, other: 'Item') -> bool:
+        return self.weight > other.weight
+
+    def __ge__(self, other: 'Item') -> bool:
+        return self.weight >= other.weight
 
 class Backpack:
     def __init__(self, amountOfEachItems: list[int]):
@@ -39,11 +50,12 @@ class Backpack:
 
     def calculateFitness(self, limitWeight: int, items: list[Item]) -> None:
         sumCost = sum(items[i].cost * self.genome[i] for i in range(len(items)))
-        if self.weight <= limitWeight:
+        overload = self.weight - limitWeight
+        if overload <= 0:
             self.cost = sumCost
         else:
-            koeff = 1 - (self.weight - limitWeight) / limitWeight
-            self.cost = int(sumCost * koeff)
+            penalty = (self.weight - limitWeight) / limitWeight
+            self.cost = int(sumCost * (1 - penalty ** 2)) if overload <= max(item.weight for item in items) else 0
 
 
 class Generation:
