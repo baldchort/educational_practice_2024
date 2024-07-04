@@ -208,7 +208,7 @@ class UILogic:
         self.iterateAlgorithm(self.data.iteration)
 
     def forwardButtonEvent(self):
-        self.data.iteration += 1
+        self.data.iteration += 1 if self.data.iteration < self.data.algParams.maxAmountOfGenerations else 0
         self.iterateAlgorithm(self.data.iteration)
 
     def updateParams(self):
