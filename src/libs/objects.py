@@ -61,8 +61,9 @@ class Backpack:
 class Generation:
     def __init__(self, backpacks: list[Backpack]):
         self.backpacks = backpacks
-        self.maxFitness = 0
-        self.averageFitness = 0
+
+    def __str__(self):
+        return "\n".join(map(str, self.backpacks))
 
     def __iter__(self) -> Iterator:
         return iter(self.backpacks)
@@ -72,9 +73,6 @@ class Generation:
 
     def __getitem__(self, key: int) -> Backpack:
         return self.backpacks[key]
-
-    def __str__(self):
-        return "\n".join(map(str, self.backpacks))
 
     def append(self, item: Backpack) -> None:
         self.backpacks.append(item)
@@ -104,41 +102,8 @@ class Generation:
             backpack.calculateFitness(limitWeight, items)
 
 
-class AlgorithmParameters:
-    def __init__(self,
-                 maxBackpackWeight: int,
-                 crossingProbability: float,
-                 mutationProbability: float,
-                 amountOfIndividsPerGeneration: int,
-                 maxAmountOfGenerations: int):
-        self.maxBackpackWeight = maxBackpackWeight
-        self.crossingProbability = crossingProbability
-        self.mutationProbability = mutationProbability
-        self.amountOfIndividsPerGeneration = amountOfIndividsPerGeneration
-        self.maxAmountOfGenerations = maxAmountOfGenerations
-
-
-
 class IterationInfo:
     def __init__(self, bestBackpacks: list[Backpack], currentMaxFitness: int, currentAverageFitness: float):
         self.bestBackpacks = bestBackpacks
         self.currentMaxFitness = currentMaxFitness
         self.currentAverageFitness = currentAverageFitness
-
-
-# class AllInfo:
-#     def __init__(self, maxBackpackWeight: int, items: list[Item]):
-#         self.maxBackpackWeight = maxBackpackWeight
-#         self.items = items
-#         self.maxFitness = []
-#         self.averageFitness = []
-#
-#     def appendMaxFitness(self, iteration: IterationInfo) -> None:
-#         self.maxFitness.append(iteration.currentMaxFitness)
-#
-#     def appendAverageFitness(self, iteration: IterationInfo) -> None:
-#         self.averageFitness.append(iteration.currentAverageFitness)
-#
-#     def drawPlot(self) -> None:
-#         pass
-
