@@ -1,4 +1,4 @@
-from objects import *
+from src.libs.objects import *
 
 
 class AlgorithmParameters:
