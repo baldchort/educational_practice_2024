@@ -49,6 +49,7 @@ class Backpack:
 class Generation:
     def __init__(self, backpacks: list[Backpack]):
         self.backpacks = backpacks
+        self.descendingSortedBackpacks = sorted(backpacks, key=lambda x: x.cost, reverse=True)
 
     def __str__(self):
         return "\n".join(map(str, self.backpacks))
@@ -72,8 +73,7 @@ class Generation:
         self.backpacks.remove(item)
 
     def getBestBackpacks(self) -> list[Backpack]:
-        sorted_backpacks = sorted(self.backpacks, key=lambda x: x.cost, reverse=True)
-        return sorted_backpacks[:3]
+        return self.descendingSortedBackpacks[:3]
 
     def getAverageFitness(self) -> float:
         return sum(backpack.cost for backpack in self.backpacks) / len(self.backpacks)
@@ -88,6 +88,9 @@ class Generation:
     def calculateFitness(self, limitWeight: int, items: list[Item]) -> None:
         for backpack in self.backpacks:
             backpack.calculateFitness(limitWeight, items)
+
+    def sortBackpacksInDescendingOrder(self) -> None:
+        self.descendingSortedBackpacks = sorted(self.backpacks, key=lambda x: x.cost, reverse=True)
 
 
 class IterationInfo:
