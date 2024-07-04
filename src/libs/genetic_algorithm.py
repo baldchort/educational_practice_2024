@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from algorithm_parameters import *
+from src.libs.algorithm_parameters import *
 from src.libs.GA_methods.crossing import *
 from src.libs.GA_methods.generation_selection import *
 from src.libs.GA_methods.mutation import *

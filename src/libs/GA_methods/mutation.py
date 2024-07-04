@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import random
 
-from algorithm_parameters import *
+from src.libs.algorithm_parameters import *
 
 
 class MutationStrategy(ABC):

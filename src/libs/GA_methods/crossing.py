@@ -1,7 +1,7 @@
 import random
 from abc import ABC, abstractmethod
 
-from algorithm_parameters import *
+from src.libs.algorithm_parameters import *
 
 
 class CrossingStrategy(ABC):
