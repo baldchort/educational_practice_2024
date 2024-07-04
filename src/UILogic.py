@@ -3,7 +3,7 @@ import sys
 
 from PyQt6 import QtWidgets
 from PyQt6.QtGui import QIntValidator
-from PyQt6.QtWidgets import QFileDialog, QTableWidgetItem
+from PyQt6.QtWidgets import QFileDialog, QTableWidgetItem, QMessageBox
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
@@ -62,25 +62,21 @@ class Data:
             item = Item(random.randint(1, 100), random.randint(1, 100))
             self.items.append(item)
 
-    # Метод для считывания данных из файла. Совмещает считывание и проверку данных.
-    # По хорошему, методы ввода данных вынести из логики Data'ы.
-    # print нужно будет заменить на вывод замечания в приложении.
-    # Успешность считывания как раз можно использовать для этого
     def readItemsFromFile(self) -> bool:
-        # Если физически возможно передать путь на несуществующий/неоткрывающийся файл
-        # то нужно обернуть всё тело в try ... except: return False
         self.items.clear()
         with open(self.inputFileName, 'r') as file:
             lines = file.readlines()
             if len(lines) < 1:
-                print("Говно ваш файл")
                 return False
-            for line in lines:
-                cost, weight = line.split()
+            try:
+                self.backpackAmount = int(lines[0])
+            except ValueError:
+                return False
+            for line in lines[1:]:
                 try:
+                    cost, weight = line.split()
                     self.items.append(Item(int(cost), int(weight)))
                 except ValueError:
-                    print("Говно ваш файл")
                     self.items.clear()
                     return False
         return True
@@ -120,21 +116,13 @@ class UILogic:
         x_len = iter
         self.canvas.axes.clear()
 
-        # Рисуем графики
         self.canvas.axes.plot(list(range(x_len)), averageFitness, 'r-', label='Средняя приспособленность')
         self.canvas.axes.plot(list(range(x_len)), maxFitness, 'b-', label='Максимальная приспособленность')
 
-        # Устанавливаем сетку
         self.canvas.axes.grid()
 
-        # Устанавливаем метки по оси X
         self.canvas.axes.set_xticks(np.arange(0, x_len + 1, 2))
 
-        # Устанавливаем метки по оси Y
-        max_fitness_value = max(maxFitness)
-        # self.canvas.axes.set_yticks(np.arange(min(maxFitness), max_fitness_value + 1, 50))
-
-        # Устанавливаем подписи к осям
         self.canvas.axes.set_xlabel('Поколение')
         self.canvas.axes.set_ylabel('Приспособленность')
 
@@ -143,6 +131,14 @@ class UILogic:
 
         # Перерисовываем график
         self.canvas.draw()
+
+    def showErrorMessage(self, title: str, message: str) -> None:
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Icon.Critical)
+        msg.setText(message)
+        msg.setWindowTitle(title)
+        msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+        msg.exec()
 
     def adjustLineEdits(self):
         validator = QIntValidator(1, 999)
@@ -200,7 +196,7 @@ class UILogic:
             for j in range(self.handInputDialogUI.tableWidget.columnCount()):
                 if self.handInputDialogUI.tableWidget.item(i, j) is None or \
                         not self.handInputDialogUI.tableWidget.item(i, j).text().isdigit():
-                    print("poop " + str(i) + str(j))
+                    # print("poop " + str(i) + str(j))
                     return False
         return True
 
@@ -228,7 +224,8 @@ class UILogic:
             self.data.crossing_strategies[self.mainWindowUI.crossing_method_comboBox.currentData(0)]
 
         self.data.algParams.generationSelectionStrategy = \
-            self.data.generation_selection_strategies[self.mainWindowUI.methodOfSelectingIndividsComboBox.currentData(0)]
+            self.data.generation_selection_strategies[
+                self.mainWindowUI.methodOfSelectingIndividsComboBox.currentData(0)]
 
         self.data.algParams.parentsSelectionStrategy = \
             self.data.parent_selection_strategies[self.mainWindowUI.parent_selection_comboBox.currentData(0)]
@@ -263,7 +260,6 @@ class UILogic:
 
     def startButtonEvent(self):
         self.mainWindowUI.iterationTabWidget_2.setCurrentIndex(1)
-
         self.startAlgorithm()
 
     def resetButtonEvent(self):
@@ -333,13 +329,16 @@ class UILogic:
             initialFilter='Text File (*.txt)'
         )
         if file_name[0] != "":
-            self.data.algNum = 2
             self.data.inputFileName = file_name[0]
+            if self.data.readItemsFromFile():
+                self.data.algNum = 2
+            else:
+                self.data.inputFileName = ""
+                self.showErrorMessage("Ошибка",
+                                      "Ошибка при чтении файла: несоответствующий формат данных")
 
         self.mainWindow.setEnabled(True)
         self.switchAlgorithms(self.data.algNum)
-
-        print(self.data.inputFileName)
 
     def startAlgorithm(self):
         self.data.iteration = 0
