@@ -95,19 +95,3 @@ class IterationInfo:
         self.bestBackpacks = bestBackpacks
         self.currentMaxFitness = currentMaxFitness
         self.currentAverageFitness = currentAverageFitness
-
-# class AllInfo:
-#     def __init__(self, maxBackpackWeight: int, items: list[Item]):
-#         self.maxBackpackWeight = maxBackpackWeight
-#         self.items = items
-#         self.maxFitness = []
-#         self.averageFitness = []
-#
-#     def appendMaxFitness(self, iteration: IterationInfo) -> None:
-#         self.maxFitness.append(iteration.currentMaxFitness)
-#
-#     def appendAverageFitness(self, iteration: IterationInfo) -> None:
-#         self.averageFitness.append(iteration.currentAverageFitness)
-#
-#     def drawPlot(self) -> None:
-#         pass
