@@ -64,18 +64,16 @@ class Data:
 
     def readItemsFromFile(self) -> bool:
         self.items.clear()
+        self.backpackAmount = 0
         with open(self.inputFileName, 'r') as file:
             lines = file.readlines()
             if len(lines) < 1:
                 return False
-            try:
-                self.backpackAmount = int(lines[0])
-            except ValueError:
-                return False
-            for line in lines[1:]:
+            for line in lines:
                 try:
-                    cost, weight = line.split()
+                    weight, cost = line.split()
                     self.items.append(Item(int(cost), int(weight)))
+                    self.backpackAmount += 1
                 except ValueError:
                     self.items.clear()
                     return False
