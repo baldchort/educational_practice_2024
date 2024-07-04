@@ -21,6 +21,7 @@ class Item:
     def __ge__(self, other: 'Item') -> bool:
         return self.weight >= other.weight
 
+
 class Backpack:
     def __init__(self, amountOfEachItems: list[int]):
         self.genome = amountOfEachItems
@@ -32,6 +33,9 @@ class Backpack:
 
     def __iter__(self) -> Iterator:
         return iter(self.genome)
+
+    def __len__(self) -> int:
+        return len(self.genome)
 
     def __le__(self, other: 'Backpack') -> bool:
         return self.cost <= other.cost
@@ -55,12 +59,13 @@ class Backpack:
             self.cost = sumCost
         else:
             penalty = (self.weight - limitWeight) / limitWeight
-            self.cost = int(sumCost * (1 - penalty ** 2)) if overload <= max(item.weight for item in items) else 0
+            self.cost = int(sumCost * (1 - penalty)) if overload <= max(item.weight for item in items) else 0
 
 
 class Generation:
     def __init__(self, backpacks: list[Backpack]):
         self.backpacks = backpacks
+        self.descendingSortedBackpacks = sorted(backpacks, key=lambda x: x.cost, reverse=True)
 
     def __str__(self):
         return "\n".join(map(str, self.backpacks))
@@ -100,6 +105,9 @@ class Generation:
     def calculateFitness(self, limitWeight: int, items: list[Item]) -> None:
         for backpack in self.backpacks:
             backpack.calculateFitness(limitWeight, items)
+
+    def sortBackpacksInDescendingOrder(self) -> None:
+        self.descendingSortedBackpacks = sorted(self.backpacks, key=lambda x: x.cost, reverse=True)
 
 
 class IterationInfo:

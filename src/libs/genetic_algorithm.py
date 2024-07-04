@@ -44,32 +44,39 @@ class GeneticAlgorithm:
         return randomGeneration
 
     def getSolution(self) -> list[IterationInfo]:
-        # if self.parameters.maxBackpackWeight < min(self.items)
         generation = self.generateRandomGeneration()
-        print(f"Начальное случайно сгенерированное поколение:")
-        self.outputBackpacks(generation.backpacks)
-        print()
+        if log:
+            print(f"Начальное случайно сгенерированное поколение:")
+            self.outputBackpacks(generation.backpacks)
+            print()
 
         maxFitness = []
         averageFitness = []
         allIterations = []
+        global generationNum
         for generationNumber in range(1, self.algorithmParameters.maxAmountOfGenerations + 1):
+            generationNum = generationNumber
             generation.calculateWeight(self.items)
             generation.calculateFitness(self.algorithmParameters.maxBackpackWeight, self.items)
+            generation.sortBackpacksInDescendingOrder()
             maxFitness.append(generation.getMaxFitness())
             averageFitness.append(generation.getAverageFitness())
             allIterations.append(IterationInfo(generation.getBestBackpacks(), maxFitness[-1], averageFitness[-1]))
 
-            print(f"\n------------------")
-            print(f"Лучшие решения поколения №{generationNumber}")
-            self.outputBackpacks(generation.getBestBackpacks())
+            if log:
+                print(f"\n------------------")
+                print(f"Лучшие решения поколения №{generationNumber}")
+                self.outputBackpacks(generation.getBestBackpacks())
+                print(f"Текущая максимальная приспособленность: {generation.getMaxFitness()}")
+                print(f"Текущая средняя приспособленность: {generation.getAverageFitness()}")
 
             selectedParents = self.parentsSelectionStrategy.selectParent(generation, self.algorithmParameters)
-            producedChildren = self.crossingStrategy.crossing(selectedParents, self.algorithmParameters, self.items)
+            producedChildren = self.crossingStrategy.crossing(selectedParents, self.algorithmParameters)
             self.mutationStrategy.mutation(producedChildren, self.algorithmParameters, self.items)
-            generation = self.generationSelectionStrategy.select(selectedParents, producedChildren,
-                                                                 self.algorithmParameters, self.items)
-
+            generation = self.generationSelectionStrategy.select(generation, producedChildren,
+                                                                 self.algorithmParameters)
+        if log:
+            self.drawPlot(maxFitness, averageFitness)
         return allIterations
 
     def drawPlot(self, maxFitness: list[int], averageFitness: list[float]) -> None:
@@ -84,8 +91,7 @@ class GeneticAlgorithm:
 
     def outputGenerationInfo(self, generation: Generation, generationNumber: int) -> None:
         print(f"\nПоколение №{generationNumber}:")
-        sortedGeneration = sorted(generation, key=lambda x: x.cost, reverse=True)
-        for i, solution in enumerate(sortedGeneration):
+        for i, solution in enumerate(generation.descendingSortedBackpacks):
             print(f"{i + 1}) {solution.genome}")
             print(f"\tСуммарная стоимость вещей: {solution.cost}")
             print(
