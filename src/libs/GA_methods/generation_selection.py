@@ -63,7 +63,9 @@ class TruncationSelection(GenerationSelectionStrategy):
 class ExclusionSelection(GenerationSelectionStrategy):
     def select(self, oldGeneration: Generation, producedChildren: list[Backpack],
                algorithmParameters: AlgorithmParameters) -> Generation:
-        sortedOldGeneration = sorted(oldGeneration.backpacks + producedChildren, key=lambda x: x.cost, reverse=True)
+        allCandidates = oldGeneration.backpacks + producedChildren
+        sortedOldGeneration = sorted(allCandidates, key=lambda x: x.cost, reverse=True)[
+                              :int(0.5 * algorithmParameters.amountOfIndividsPerGeneration)]
         newGeneration = []
         addedToNewGenerationGenomes = []
 
@@ -75,7 +77,7 @@ class ExclusionSelection(GenerationSelectionStrategy):
                 addedToNewGenerationGenomes.append(individ.genome)
 
         while len(newGeneration) != algorithmParameters.amountOfIndividsPerGeneration:
-            newGeneration.append(random.choice(sortedOldGeneration))
+            newGeneration.append(random.choice(allCandidates))
 
         global generationNum
         if log and generationNum == 1:
