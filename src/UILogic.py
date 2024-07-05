@@ -212,14 +212,24 @@ class UILogic:
         self.iterateAlgorithm(self.data.iteration)
 
     def updateParams(self):
-        self.data.algParams.maxBackpackWeight = int(self.mainWindowUI.backpackValueLE.text())
+        if int(self.mainWindowUI.backpackValueLE.text()) <= 0:
+            self.data.algParams.maxBackpackWeight = 1
+        else:
+            self.data.algParams.maxBackpackWeight = int(self.mainWindowUI.backpackValueLE.text())
+
         self.data.algParams.crossingProbability = float(self.mainWindowUI.crossingProbabilitySpin.value())
         self.data.algParams.mutationProbability = float(self.mainWindowUI.mutationProbabilitySpin.value())
+
         if int(self.mainWindowUI.entityAmountLE.text()) < 3:
             self.data.algParams.amountOfIndividsPerGeneration = 3
         else:
             self.data.algParams.amountOfIndividsPerGeneration = int(self.mainWindowUI.entityAmountLE.text())
-        self.data.algParams.maxAmountOfGenerations = int(self.mainWindowUI.generationAmountLE.text())
+
+        if int(self.mainWindowUI.generationAmountLE.text()) <= 0:
+            self.data.algParams.maxAmountOfGenerations = 1
+        else:
+            self.data.algParams.maxAmountOfGenerations = int(self.mainWindowUI.generationAmountLE.text())
+
         self.data.algParams.crossingStrategy = \
             self.data.crossing_strategies[self.mainWindowUI.crossing_method_comboBox.currentData(0)]
 
