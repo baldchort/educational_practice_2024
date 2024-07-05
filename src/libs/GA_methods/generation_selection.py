@@ -74,9 +74,8 @@ class ExclusionSelection(GenerationSelectionStrategy):
                 newGeneration.append(individ)
                 addedToNewGenerationGenomes.append(individ.genome)
 
-        # if len(newGeneration) != algorithmParameters.amountOfIndividsPerGeneration:
-        #     print("ПУПУПУ")
-        #     exit(0)
+        while len(newGeneration) != algorithmParameters.amountOfIndividsPerGeneration:
+            newGeneration.append(random.choice(sortedOldGeneration))
 
         global generationNum
         if log and generationNum == 1:

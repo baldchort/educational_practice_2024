@@ -108,7 +108,7 @@ class GeneticAlgorithm:
 
 
 if __name__ == '__main__':
-    items = [Item(5, 2), Item(7, 3), Item(6, 4), Item(3, 2)]
+    items = [Item(5, 2), Item(7, 3), Item(4, 6), Item(3, 2)]
     maxBackpackWeight = 22
     crossingProbability = 0.9
     mutationProbability = 0.2
